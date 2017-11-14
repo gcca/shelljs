@@ -59,6 +59,8 @@ function rmdirSyncRecursive(dir, force, fromSymlink) {
     for (;;) {
       try {
         result = fs.rmdirSync(dir);
+        console.info('= = = = = = = = = = = = = = = = = =');
+        console.info(dir)
         if (fs.existsSync(dir)) throw { code: 'EAGAIN' };
         break;
       } catch (er) {

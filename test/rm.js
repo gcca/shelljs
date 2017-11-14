@@ -259,6 +259,14 @@ test(
   }
 );
 
+test('remove symbolic link to a file', t => {
+  const result = shell.rm(`${t.context.tmp}/link`);
+  t.falsy(shell.error());
+  t.is(result.code, 0);
+  t.falsy(fs.existsSync(`${t.context.tmp}/link`));
+  t.truthy(fs.existsSync(`${t.context.tmp}/file1`));
+});
+
 test('remove symbolic link to a dir', t => {
   const result = shell.rm(`${t.context.tmp}/rm/link_to_a_dir`);
   t.falsy(shell.error());
@@ -278,6 +286,14 @@ test('rm -rf on a symbolic link to a dir deletes its contents', t => {
     t.truthy(fs.existsSync(`${t.context.tmp}/rm/a_dir`));
     t.falsy(fs.existsSync(`${t.context.tmp}/rm/a_dir/a_file`));
   });
+});
+
+// TODO: rename test
+test('rm on a symbolic link to a dir cannot delete its contents without recursive flag', t => {
+  const result = shell.rm(`${t.context.tmp}/rm/link_to_a_dir/`);
+  t.truthy(shell.error());
+  t.is(result.code, 1);
+  t.is(result.stderr, 'rm: path is a directory');
 });
 
 test('remove broken symbolic link', t => {
